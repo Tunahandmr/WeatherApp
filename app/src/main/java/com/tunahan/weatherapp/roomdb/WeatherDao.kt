@@ -17,5 +17,5 @@ interface WeatherDao {
     suspend fun updateWeather(weather: Weather)
 
     @Query("SELECT * FROM weathers")
-    suspend fun getAllWeather(): List<Weather>
+    fun getAllWeather(): LiveData<List<Weather>>
 }
