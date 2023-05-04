@@ -5,6 +5,9 @@ import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.tunahan.weatherapp.R
+import com.tunahan.weatherapp.repo.WeatherRepository
+import com.tunahan.weatherapp.repo.WeatherRepositoryInterface
+import com.tunahan.weatherapp.roomdb.WeatherDao
 import com.tunahan.weatherapp.roomdb.WeatherDatabase
 import com.tunahan.weatherapp.service.WeatherAPI
 import com.tunahan.weatherapp.util.Constans.BASE_URL
@@ -31,6 +34,10 @@ object WeatherModule {
     @Singleton
     @Provides
     fun injectDao(database:WeatherDatabase) = database.weatherDao()
+
+    @Singleton
+    @Provides
+    fun injectNormalRepo(dao: WeatherDao, api: WeatherAPI) = WeatherRepository(dao,api) as WeatherRepositoryInterface
 
 
     @Singleton

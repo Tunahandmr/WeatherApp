@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.size
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
 import com.bumptech.glide.RequestManager
 import com.tunahan.weatherapp.adapter.ViewPagerAdapter
 import com.tunahan.weatherapp.databinding.FragmentMainBinding
@@ -50,11 +51,16 @@ class MainFragment @Inject constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        loadData()
+//        loadData()
         job?.cancel()
         job = lifecycleScope.launch {
             delay(1000)
             binding.viewPager.adapter = viewPagerAdapter
+        }
+
+        binding.addIV.setOnClickListener {
+            val a = MainFragmentDirections.actionMainFragmentToSearchFragment()
+            Navigation.findNavController(it).navigate(a)
         }
 
 

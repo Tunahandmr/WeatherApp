@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tunahan.weatherapp.adapter.SearchAdapter
+import com.tunahan.weatherapp.model.CityData
 import com.tunahan.weatherapp.model.Weather
 import com.tunahan.weatherapp.model.WeatherResult
 import com.tunahan.weatherapp.repo.WeatherRepositoryInterface
@@ -14,7 +16,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherViewModel @Inject constructor(
-    private val repositoryInterface: WeatherRepositoryInterface
+    private val repositoryInterface: WeatherRepositoryInterface,
+
 ) : ViewModel() {
 
     val weatherList = repositoryInterface.getWeather()
@@ -22,7 +25,6 @@ class WeatherViewModel @Inject constructor(
     private val weathers = MutableLiveData<Resource<WeatherResult>>()
     val weatherRetrofitList: LiveData<Resource<WeatherResult>>
         get() = weathers
-
 
     private var insertArtMsg = MutableLiveData<Resource<Weather>>()
     val insertArtMessage: LiveData<Resource<Weather>>
@@ -57,6 +59,7 @@ class WeatherViewModel @Inject constructor(
             }
         }
     }
+
 
 
 }
