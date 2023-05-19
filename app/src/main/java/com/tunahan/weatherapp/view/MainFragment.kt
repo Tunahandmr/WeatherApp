@@ -10,21 +10,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.view.size
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
 import com.bumptech.glide.RequestManager
 import com.tunahan.weatherapp.adapter.ViewPagerAdapter
 import com.tunahan.weatherapp.databinding.FragmentMainBinding
 import com.tunahan.weatherapp.databinding.ItemViewPagerBinding
+import com.tunahan.weatherapp.model.Weather
 import com.tunahan.weatherapp.model.WeatherResult
 import com.tunahan.weatherapp.service.WeatherAPI
 import com.tunahan.weatherapp.util.Constans
+import com.tunahan.weatherapp.viewmodel.WeatherViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 
@@ -37,6 +43,7 @@ class MainFragment @Inject constructor(
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
     var job: Job? = null
+    lateinit var mWeatherViewModel: WeatherViewModel
 
 
     override fun onCreateView(
@@ -51,12 +58,19 @@ class MainFragment @Inject constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        loadData()
+        mWeatherViewModel = ViewModelProvider(requireActivity())[WeatherViewModel::class.java]
+        mWeatherViewModel.weatherList.observe(viewLifecycleOwner, Observer { note ->
+            viewPagerAdapter.setData(note)
+        })
+
+
         job?.cancel()
         job = lifecycleScope.launch {
             delay(1000)
             binding.viewPager.adapter = viewPagerAdapter
         }
+
+        //  mWeatherViewModel.searchCity(Constans.API_KEY,"tr","ankara")
 
         binding.addIV.setOnClickListener {
             val a = MainFragmentDirections.actionMainFragmentToSearchFragment()
@@ -67,59 +81,7 @@ class MainFragment @Inject constructor(
     }
 
 
-    private fun loadData() {
 
-        /*  val client = OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
-              .readTimeout(30, TimeUnit.SECONDS)
-              .addInterceptor { chain ->
-                  val originalRequest = chain.request()
-                  val requestWithHeaders = originalRequest.newBuilder()
-                      .header("Content-Type", "application/json")
-                      .build()
-                  chain.proceed(requestWithHeaders)
-              }
-              .build()*/
-
-
-        /* val retrofit = Retrofit.Builder()
-             .baseUrl("https://api.collectapi.com/")
-             .addConverterFactory(GsonConverterFactory.create())
-             .build()*/
-
-        //   val service = retrofit.create(WeatherAPI::class.java)
-
-
-        val call = weatherAPI.getWeather(
-            authorization = Constans.API_KEY,
-            lang = "tr",
-            city = "ankara"
-        )
-/*
-        call.enqueue(object : Callback<WeatherResult> {
-            override fun onResponse(call: Call<WeatherResult>, response: Response<WeatherResult>) {
-                if (response.isSuccessful) {
-                    val weatherResponse = response.body()
-                    glide.load(
-                        weatherResponse?.result?.get(0)?.icon
-                    ).into(binding.imageView)
-
-                    viewPagerAdapter.weatherList = listOf(
-                        weatherResponse?.result?.get(0)?.icon.toString(),
-                        weatherResponse?.result?.get(1)?.icon.toString(),
-                        weatherResponse?.result?.get(2)?.icon.toString()
-                    )
-
-                } else {
-                    Log.e("WeatherService", "Error: ${response.code()}")
-                }
-            }
-
-            override fun onFailure(call: Call<WeatherResult>, t: Throwable) {
-                Log.e("WeatherService", "Error: ${t.message}")
-            }
-        })*/
-
-    }
 
 
     override fun onDestroyView() {

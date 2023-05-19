@@ -18,6 +18,7 @@ constructor(
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when(className){
             MainFragment::class.java.name -> MainFragment(viewPagerAdapter,weatherAPI,glide)
+            SearchFragment::class.java.name -> SearchFragment(glide)
             else->super.instantiate(classLoader, className)
         }
 

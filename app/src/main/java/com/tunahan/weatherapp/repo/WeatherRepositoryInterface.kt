@@ -15,5 +15,5 @@ interface WeatherRepositoryInterface {
 
     fun getWeather(): LiveData<List<Weather>>
 
-    suspend fun weatherCall(key:String,lang:String,city:String):Resource<WeatherResult>
+  //  suspend fun weatherCall(key:String,lang:String,city:String):Resource<WeatherResult>
 }

@@ -50,15 +50,16 @@ class WeatherViewModel @Inject constructor(
         return city.lowercase()
     }
 
-    fun searchCity(key: String, lang: String, city: String) {
+  /*  fun searchCity(key: String, lang: String, city: String) {
         if (city.isNotEmpty()) {
             weathers.value = Resource.loading(null)
             viewModelScope.launch {
                 val response = repositoryInterface.weatherCall(key, lang, city)
                 weathers.value = response
+
             }
         }
-    }
+    }*/
 
 
 

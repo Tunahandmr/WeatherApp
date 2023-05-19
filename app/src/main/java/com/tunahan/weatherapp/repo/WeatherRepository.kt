@@ -9,8 +9,7 @@ import com.tunahan.weatherapp.util.Resource
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-    private val weatherDao: WeatherDao,
-    private val weatherAPI: WeatherAPI
+    private val weatherDao: WeatherDao
 ): WeatherRepositoryInterface {
 
     override suspend fun insertWeather(weather: Weather) {
@@ -28,7 +27,7 @@ class WeatherRepository @Inject constructor(
     override fun getWeather(): LiveData<List<Weather>> {
         return weatherDao.getAllWeather()
     }
-
+/*
     override suspend fun weatherCall(
         key: String,
         lang: String,
@@ -46,5 +45,5 @@ class WeatherRepository @Inject constructor(
         }catch (e: Exception) {
             Resource.error("No data!",null)
         }
-    }
+    }*/
 }

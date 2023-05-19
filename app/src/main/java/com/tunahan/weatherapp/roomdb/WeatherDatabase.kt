@@ -9,4 +9,8 @@ abstract class WeatherDatabase : RoomDatabase() {
 
     abstract fun weatherDao(): WeatherDao
 
+    companion object {
+        val DATABASE_NAME = "weatherDB"
+    }
+
 }

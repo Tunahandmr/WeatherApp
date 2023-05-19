@@ -1,24 +1,36 @@
 package com.tunahan.weatherapp.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.RequestManager
 import com.tunahan.weatherapp.adapter.SearchAdapter
+import com.tunahan.weatherapp.adapter.ViewPagerAdapter
 import com.tunahan.weatherapp.databinding.FragmentSearchBinding
 import com.tunahan.weatherapp.model.CityData
+import com.tunahan.weatherapp.model.Weather
+import com.tunahan.weatherapp.model.WeatherResult
+import com.tunahan.weatherapp.service.WeatherAPI
+import com.tunahan.weatherapp.util.Constans
+import com.tunahan.weatherapp.viewmodel.WeatherViewModel
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 import kotlin.collections.ArrayList
 
 
 class SearchFragment @Inject constructor(
-
+    val glide: RequestManager
 ) : Fragment() {
 
 
@@ -27,6 +39,8 @@ class SearchFragment @Inject constructor(
 
     private lateinit var searchAdapter: SearchAdapter
     private var cityList = ArrayList<CityData>()
+    lateinit var mWeatherViewModel: WeatherViewModel
+    private var myL = kotlin.collections.ArrayList<Weather>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,19 +53,34 @@ class SearchFragment @Inject constructor(
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
 
+        mWeatherViewModel = ViewModelProvider(requireActivity())[WeatherViewModel::class.java]
+
+
         binding.searchRV.setHasFixedSize(true)
         binding.searchRV.layoutManager = LinearLayoutManager(requireContext())
 
         addDataToList()
         searchAdapter = SearchAdapter(cityList)
         binding.searchRV.adapter = searchAdapter
+
+
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+
         searchView()
+        val a = "bursa"
+        val weather = Weather(a,0)
+        binding.tickButton.setOnClickListener {
+            mWeatherViewModel.insertWeather(weather)
+        }
+     //  println(myL[0].city)
+
 
         binding.backButton.setOnClickListener {
             val action = SearchFragmentDirections.actionSearchFragmentToMainFragment()
@@ -112,6 +141,8 @@ class SearchFragment @Inject constructor(
 
 
     }
+
+
 
     override fun onDestroyView() {
         super.onDestroyView()

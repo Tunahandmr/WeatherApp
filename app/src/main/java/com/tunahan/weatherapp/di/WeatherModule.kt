@@ -37,7 +37,7 @@ object WeatherModule {
 
     @Singleton
     @Provides
-    fun injectNormalRepo(dao: WeatherDao, api: WeatherAPI) = WeatherRepository(dao,api) as WeatherRepositoryInterface
+    fun injectNormalRepo(dao: WeatherDao) = WeatherRepository(dao) as WeatherRepositoryInterface
 
 
     @Singleton
