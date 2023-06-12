@@ -37,28 +37,16 @@ object WeatherModule {
 
     @Singleton
     @Provides
-    fun injectNormalRepo(dao: WeatherDao) = WeatherRepository(dao) as WeatherRepositoryInterface
+    fun injectNormalRepo(dao: WeatherDao,weatherAPI: WeatherAPI) = WeatherRepository(dao,weatherAPI) as WeatherRepositoryInterface
 
 
     @Singleton
     @Provides
     fun injectRetrofitAPI() : WeatherAPI{
 
-        val client = OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS)
-            .readTimeout(30, TimeUnit.SECONDS)
-            .addInterceptor { chain ->
-                val originalRequest = chain.request()
-                val requestWithHeaders = originalRequest.newBuilder()
-                    .header("Content-Type", "application/json")
-                    .build()
-                chain.proceed(requestWithHeaders)
-            }
-            .build()
-
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create())
             .baseUrl(BASE_URL)
-           // .client(client)
             .build()
             .create(WeatherAPI::class.java)
     }

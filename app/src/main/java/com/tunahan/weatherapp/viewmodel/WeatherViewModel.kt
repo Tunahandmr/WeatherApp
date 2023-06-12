@@ -12,6 +12,7 @@ import com.tunahan.weatherapp.repo.WeatherRepositoryInterface
 import com.tunahan.weatherapp.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import retrofit2.Call
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,6 +49,17 @@ class WeatherViewModel @Inject constructor(
 
     fun lowerCity(city: String): String {
         return city.lowercase()
+    }
+
+    val myCall: MutableLiveData<Call<WeatherResult>> = MutableLiveData()
+
+    fun retrofitWeather(
+        authorization: String,
+        lang: String,
+        city: String
+    ) {
+        val a = repositoryInterface.retrofitWeather(authorization, lang, city)
+        myCall.value = a
     }
 
   /*  fun searchCity(key: String, lang: String, city: String) {

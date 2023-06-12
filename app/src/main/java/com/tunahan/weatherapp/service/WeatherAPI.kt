@@ -10,8 +10,11 @@ import retrofit2.http.Query
 interface WeatherAPI {
 
     @GET("weather/getWeather")
-    fun getWeather(@Header("Authorization") authorization: String,@Query("data.lang") lang: String, @Query("data.city") city: String): Call<WeatherResult>
-
+    fun getWeather(
+        @Header("Authorization") authorization: String,
+        @Query("data.lang") lang: String,
+        @Query("data.city") city: String
+    ): Call<WeatherResult>
 
 
 }

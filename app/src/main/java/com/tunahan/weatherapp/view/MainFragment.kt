@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.RequestManager
 import com.tunahan.weatherapp.adapter.ViewPagerAdapter
 import com.tunahan.weatherapp.databinding.FragmentMainBinding
@@ -55,6 +56,19 @@ class MainFragment @Inject constructor(
     }
 
 
+    override fun onResume() {
+        super.onResume()
+
+        val myPageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                Log.d("tunahan", position.toString())
+            }
+        }
+
+        binding.viewPager.registerOnPageChangeCallback(myPageChangeCallback)
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -63,6 +77,8 @@ class MainFragment @Inject constructor(
             viewPagerAdapter.setData(note)
         })
 
+
+        callWeather()
 
         job?.cancel()
         job = lifecycleScope.launch {
@@ -80,6 +96,32 @@ class MainFragment @Inject constructor(
 
     }
 
+
+    private fun callWeather() {
+
+        mWeatherViewModel.retrofitWeather(Constans.API_KEY,"tr","trabzon")
+
+        mWeatherViewModel.myCall.observe(viewLifecycleOwner, Observer {
+            it.enqueue(object : Callback<WeatherResult> {
+                override fun onResponse(
+                    call: Call<WeatherResult>,
+                    response: Response<WeatherResult>
+                ) {
+                    if(response.isSuccessful){
+                        val weatherResponse = response.body()
+                        val v = weatherResponse?.result?.get(0)?.status.toString()
+                        Log.d("response",v)
+                    }
+
+                }
+
+                override fun onFailure(call: Call<WeatherResult>, t: Throwable) {
+                    Log.e("WeatherService", "Error: ${t.message}")
+                }
+
+            })
+        })
+    }
 
 
 

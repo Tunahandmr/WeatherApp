@@ -13,12 +13,29 @@ class SearchAdapter @Inject constructor(
 ) : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
 
-    class SearchViewHolder(val binding: RecyclerRowBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    private lateinit var mListener: onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(city: String)
+    }
+
+    fun setOnItemClickListener(listener: onItemClickListener) {
+
+        mListener = listener
+    }
+
+    class SearchViewHolder(val binding: RecyclerRowBinding, listener: onItemClickListener) :
+        RecyclerView.ViewHolder(binding.root) {
+        init {
+            binding.searchText.setOnClickListener {
+                listener.onItemClick(binding.searchText.text.toString())
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val view = RecyclerRowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return SearchViewHolder(view)
+        return SearchViewHolder(view,mListener)
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {

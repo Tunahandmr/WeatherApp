@@ -6,10 +6,12 @@ import com.tunahan.weatherapp.model.WeatherResult
 import com.tunahan.weatherapp.roomdb.WeatherDao
 import com.tunahan.weatherapp.service.WeatherAPI
 import com.tunahan.weatherapp.util.Resource
+import retrofit2.Call
 import javax.inject.Inject
 
 class WeatherRepository @Inject constructor(
-    private val weatherDao: WeatherDao
+    private val weatherDao: WeatherDao,
+    private val weatherAPI: WeatherAPI
 ): WeatherRepositoryInterface {
 
     override suspend fun insertWeather(weather: Weather) {
@@ -26,6 +28,14 @@ class WeatherRepository @Inject constructor(
 
     override fun getWeather(): LiveData<List<Weather>> {
         return weatherDao.getAllWeather()
+    }
+
+    override fun retrofitWeather(
+        authorization: String,
+        lang: String,
+        city: String
+    ): Call<WeatherResult> {
+        return weatherAPI.getWeather(authorization, lang, city)
     }
 /*
     override suspend fun weatherCall(

@@ -10,8 +10,10 @@ import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.RequestManager
+import com.tunahan.weatherapp.R
 import com.tunahan.weatherapp.adapter.SearchAdapter
 import com.tunahan.weatherapp.adapter.ViewPagerAdapter
 import com.tunahan.weatherapp.databinding.FragmentSearchBinding
@@ -63,7 +65,17 @@ class SearchFragment @Inject constructor(
         searchAdapter = SearchAdapter(cityList)
         binding.searchRV.adapter = searchAdapter
 
+        searchAdapter.setOnItemClickListener(object : SearchAdapter.onItemClickListener {
+            override fun onItemClick(city: String) {
 
+                val weather = Weather(city, 0)
+                mWeatherViewModel.insertWeather(weather)
+                findNavController().navigate(R.id.action_searchFragment_to_mainFragment)
+
+            }
+
+
+        })
 
         return binding.root
     }
